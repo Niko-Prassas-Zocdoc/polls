@@ -7,12 +7,7 @@ const pollData: Prisma.PollCreateInput[] = [
     title: 'What is your favorite color?',
     question: 'What is your favorite color?',
     options: {
-      create: [
-        { text: 'Red' },
-        { text: 'Blue' },
-        { text: 'Green' },
-        { text: 'Yellow' },
-      ],
+      create: [{ text: 'Red' }, { text: 'Blue' }, { text: 'Green' }, { text: 'Yellow' }],
     },
   },
 ];
