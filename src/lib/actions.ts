@@ -47,7 +47,7 @@ export async function createPoll(prevState: PollState, formData: FormData) {
   try {
     // Create the poll and its options in a transaction
     await prisma.$transaction(async (tx) => {
-      const poll = await tx.poll.create({
+      await tx.poll.create({
         data: {
           title,
           question,
@@ -59,7 +59,7 @@ export async function createPoll(prevState: PollState, formData: FormData) {
         },
       });
     });
-  } catch (error) {
+  } catch {
     return {
       message: 'Database Error: Failed to create poll.',
     };
