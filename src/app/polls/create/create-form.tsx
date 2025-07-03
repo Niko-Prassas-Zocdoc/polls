@@ -1,10 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
+import { createPoll } from '@/lib/actions';
+import { PollState } from '@/lib/actions';
+
+const initialState: PollState = {};
 
 export default function CreatePollForm() {
+  const [state, dispatch] = useActionState(createPoll, initialState);
+  const [title, setTitle] = useState('');
   const [question, setQuestion] = useState('');
   const [answers, setAnswers] = useState(['', '']);
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
 
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuestion(e.target.value);
@@ -26,15 +36,32 @@ export default function CreatePollForm() {
     setAnswers([...answers, '']);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log('Question:', question);
-    console.log('Answers:', answers);
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 bg-white rounded-md shadow-md">
+    <form action={dispatch} className="max-w-lg mx-auto p-4 bg-white rounded-md shadow-md">
+      {state.message && (
+        <div className="mb-4 p-2 text-red-700 bg-red-100 rounded">{state.message}</div>
+      )}
+
+      <div className="mb-4">
+        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+          Title
+        </label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value={title}
+          onChange={handleTitleChange}
+          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+            state.errors?.title ? 'border-red-500' : ''
+          }`}
+          placeholder="Enter poll title"
+        />
+        {state.errors?.title && (
+          <p className="mt-1 text-sm text-red-600">{state.errors.title[0]}</p>
+        )}
+      </div>
+
       <div className="mb-4">
         <label htmlFor="question" className="block text-sm font-medium text-gray-700">
           Question
@@ -42,11 +69,17 @@ export default function CreatePollForm() {
         <input
           type="text"
           id="question"
+          name="question"
           value={question}
           onChange={handleQuestionChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+            state.errors?.question ? 'border-red-500' : ''
+          }`}
           placeholder="Enter your question here"
         />
+        {state.errors?.question && (
+          <p className="mt-1 text-sm text-red-600">{state.errors.question[0]}</p>
+        )}
       </div>
 
       {answers.map((answer, index) => (
@@ -58,9 +91,12 @@ export default function CreatePollForm() {
             <input
               type="text"
               id={`answer-${index}`}
+              name="options"
               value={answer}
               onChange={(e) => handleAnswerChange(index, e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                state.errors?.options ? 'border-red-500' : ''
+              }`}
               placeholder={`Enter answer ${index + 1}`}
             />
             {answers.length > 2 && (
@@ -75,6 +111,9 @@ export default function CreatePollForm() {
           </div>
         </div>
       ))}
+      {state.errors?.options && (
+        <p className="mt-1 mb-4 text-sm text-red-600">{state.errors.options[0]}</p>
+      )}
 
       <button
         type="button"
