@@ -1,5 +1,7 @@
 import prisma from '@/lib/prisma';
-import { CreatePoll } from '@/app/ui/polls/buttons';
+import { CreatePoll, DeletePoll } from '@/app/ui/polls/buttons';
+import { PencilIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 async function getPolls() {
   const polls = await prisma.poll.findMany({
@@ -31,7 +33,18 @@ export default async function Polls() {
               key={poll.id}
               className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
             >
-              <h2 className="text-xl font-semibold mb-2">{poll.title}</h2>
+              <div className="flex justify-between items-start mb-2">
+                <h2 className="text-xl font-semibold">{poll.title}</h2>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/polls/${poll.id}/edit`}
+                    className="flex items-center gap-1 text-gray-600 hover:text-blue-600 transition-colors"
+                  >
+                    <PencilIcon className="h-4 w-4" />
+                  </Link>
+                  <DeletePoll pollId={poll.id} />
+                </div>
+              </div>
               <p className="text-gray-600 mb-4">{poll.question}</p>
               <div className="space-y-2">
                 {poll.options.map((option) => (

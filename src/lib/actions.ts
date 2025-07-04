@@ -68,3 +68,13 @@ export async function createPoll(prevState: PollState, formData: FormData) {
   revalidatePath('/polls');
   redirect('/polls');
 }
+
+export async function deletePoll(pollId: string) {
+  await prisma.poll.delete({
+    where: {
+      id: pollId,
+    },
+  });
+
+  revalidatePath('/polls');
+}
