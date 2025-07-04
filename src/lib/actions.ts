@@ -74,6 +74,8 @@ export async function vote(optionId: string) {
     where: { id: optionId },
     data: { voteCount: { increment: 1 } },
   });
+
+  revalidatePath('/polls');
 }
 
 export async function deletePoll(pollId: string) {

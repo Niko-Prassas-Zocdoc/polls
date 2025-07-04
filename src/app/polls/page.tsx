@@ -1,7 +1,6 @@
 import prisma from '@/lib/prisma';
-import { CreatePoll, DeletePoll } from '@/app/ui/polls/buttons';
-import { PencilIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { CreatePoll } from '@/app/ui/polls/buttons';
+import PollsClient from './polls-client';
 
 async function getPolls() {
   const polls = await prisma.poll.findMany({
@@ -27,39 +26,7 @@ export default async function Polls() {
       {polls.length === 0 ? (
         <p className="text-gray-500">No polls available yet.</p>
       ) : (
-        <div className="space-y-6">
-          {polls.map((poll) => (
-            <div
-              key={poll.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h2 className="text-xl font-semibold">{poll.title}</h2>
-                <div className="flex gap-2">
-                  <Link
-                    href={`/polls/${poll.id}/edit`}
-                    className="flex items-center gap-1 text-gray-600 hover:text-blue-600 transition-colors"
-                  >
-                    <PencilIcon className="h-4 w-4" />
-                  </Link>
-                  <DeletePoll pollId={poll.id} />
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4">{poll.question}</p>
-              <div className="space-y-2">
-                {poll.options.map((option) => (
-                  <div
-                    key={option.id}
-                    className="flex items-center justify-between bg-gray-50 p-3 rounded"
-                  >
-                    <span>{option.text}</span>
-                    <span className="text-gray-500">{option.voteCount} votes</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <PollsClient polls={polls} />
       )}
     </div>
   );
