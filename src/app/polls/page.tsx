@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
-import { CreatePoll } from '@/app/ui/polls/buttons';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { CreatePoll, DeletePoll } from '@/app/ui/polls/buttons';
+import { PencilIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 async function getPolls() {
@@ -42,14 +42,7 @@ export default async function Polls() {
                   >
                     <PencilIcon className="h-4 w-4" />
                   </Link>
-                  <form>
-                    <button
-                      type="submit"
-                      className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition-colors"
-                    >
-                      <TrashIcon className="h-4 w-4" />
-                    </button>
-                  </form>
+                  <DeletePoll pollId={poll.id} />
                 </div>
               </div>
               <p className="text-gray-600 mb-4">{poll.question}</p>

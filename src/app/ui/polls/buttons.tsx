@@ -1,4 +1,5 @@
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { deletePoll } from '@/lib/actions';
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 export function CreatePoll() {
@@ -9,5 +10,19 @@ export function CreatePoll() {
     >
       <span className="hidden md:block">Create Poll</span> <PlusIcon className="h-5 md:ml-4" />
     </Link>
+  );
+}
+
+export function DeletePoll({ pollId }: { pollId: string }) {
+  const deletePollById = deletePoll.bind(null, pollId);
+  return (
+    <form action={deletePollById}>
+      <button
+        type="submit"
+        className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition-colors"
+      >
+        <TrashIcon className="h-4 w-4" />
+      </button>
+    </form>
   );
 }
