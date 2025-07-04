@@ -69,6 +69,15 @@ export async function createPoll(prevState: PollState, formData: FormData) {
   redirect('/polls');
 }
 
+export async function vote(optionId: string) {
+  await prisma.option.update({
+    where: { id: optionId },
+    data: { voteCount: { increment: 1 } },
+  });
+
+  revalidatePath('/polls');
+}
+
 export async function deletePoll(pollId: string) {
   await prisma.poll.delete({
     where: {
